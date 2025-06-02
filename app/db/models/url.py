@@ -1,6 +1,8 @@
-from datetime import datetime, timedelta
+from datetime import UTC, datetime, timedelta
 
-from sqlalchemy import Boolean, Column, DateTime, Integer, String, func
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql import func
 
 from app.db.models.base import Base
 
@@ -17,8 +19,7 @@ class URL(Base):
     expires_at = Column(
         DateTime(timezone=True),
         nullable=False,
-        default=lambda: func.now() + timedelta(days=1),
-        server_default=func.now() + timedelta(days=1),
+        default=lambda: datetime.now(UTC) + timedelta(days=1),
     )
     created_at = Column(
         DateTime(timezone=True),
@@ -27,3 +28,5 @@ class URL(Base):
         nullable=False,
     )
     click_count = Column(Integer, default=0, nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user = relationship("User", back_populates="urls")

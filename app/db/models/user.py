@@ -1,4 +1,5 @@
 from sqlalchemy import Column, DateTime, Integer, String
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 
 from app.db.models.base import Base
@@ -18,3 +19,4 @@ class User(Base):
         server_default=func.now(),
         nullable=False,
     )
+    urls = relationship("URL", back_populates="user")

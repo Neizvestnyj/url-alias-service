@@ -1,0 +1,21 @@
+# Регистрация нового пользователя
+# Ожидаемый ответ: 201 Created с данными пользователя
+POST http://localhost:8000/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "testpass123"
+}
+
+###
+
+# Повторная регистрация (для проверки ошибки)
+# Ожидаемый ответ: HTTP 400 Bad Request (Username already exists)
+POST http://localhost:8000/auth/register
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "testpass123"
+}

@@ -79,7 +79,7 @@ class DatabaseManager:
 db_manager = DatabaseManager()
 
 
-async def get_db() -> AsyncGenerator[AsyncSession, None]:
+async def get_session() -> AsyncGenerator[AsyncSession, None]:
     """
     Предоставляет асинхронную сессию базы данных для зависимостей FastAPI.
 

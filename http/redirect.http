@@ -1,0 +1,9 @@
+# Перенаправление по короткому ключу
+# Ожидаемый ответ: 307 Temporary Redirect на https://example.com
+GET http://localhost:8000/r/exmpl
+
+###
+
+# Перенаправление по несуществующему ключу
+# Ожидаемый ответ: 404 Not Found
+GET http://localhost:8000/r/invalid

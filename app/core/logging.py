@@ -2,12 +2,14 @@ import logging
 from logging.handlers import RotatingFileHandler
 
 
-def setup_logging(environment: str = "development") -> logging.Logger:
+def setup_logging(environment: str = "development", is_file_handler: bool = False) -> logging.Logger:
     """
     Настраивает логирование приложения.
 
     :param environment: Окружение приложения (development, production).
     :type environment: str
+    :param is_file_handler: Использовать `RotatingFileHandler`?.
+    :type environment: bool
     :returns: Настроенный логгер.
     :rtype: logging.Logger
     """
@@ -31,19 +33,20 @@ def setup_logging(environment: str = "development") -> logging.Logger:
     console_handler.setFormatter(log_format)
     console_handler.setLevel(log_level)
 
-    # Файловый обработчик с ротацией
-    file_handler = RotatingFileHandler(
-        "url_alias_service.log",
-        maxBytes=10 * 1024 * 1024,  # 10 MB
-        backupCount=5,
-    )
-    file_handler.setFormatter(log_format)
-    file_handler.setLevel(log_level)
+    if is_file_handler:
+        # Файловый обработчик с ротацией
+        file_handler = RotatingFileHandler(
+            "url_alias_service.log",
+            maxBytes=10 * 1024 * 1024,  # 10 MB
+            backupCount=5,
+        )
+        file_handler.setFormatter(log_format)
+        file_handler.setLevel(log_level)
 
-    # Настройка логгера
-    logger.setLevel(log_level)
-    logger.addHandler(console_handler)
-    logger.addHandler(file_handler)
+        # Настройка логгера
+        logger.setLevel(log_level)
+        logger.addHandler(console_handler)
+        logger.addHandler(file_handler)
 
     return logger
 
