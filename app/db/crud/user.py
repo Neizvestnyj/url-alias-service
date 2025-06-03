@@ -24,7 +24,6 @@ async def create_user(session: AsyncSession, user_create: UserCreate) -> UserRes
         session.add(db_user)
         await session.commit()
         await session.refresh(db_user)
-        logger.info(f"Created user: {user_create.username}")
         return UserResponse.model_validate(db_user)
     except Exception as e:
         logger.error(f"Error creating user {user_create.username}: {e}")
@@ -46,9 +45,7 @@ async def get_user_by_username(session: AsyncSession, username: str) -> UserResp
         result = await session.execute(select(User).where(User.username == username))
         user = result.scalars().first()
         if user:
-            logger.debug(f"Retrieved user: {username}")
             return UserResponse.model_validate(user)
-        logger.debug(f"No user found with username: {username}")
         return None
     except Exception as e:
         logger.error(f"Error retrieving user {username}: {e}")

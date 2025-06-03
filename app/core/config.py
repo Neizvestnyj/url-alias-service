@@ -47,4 +47,3 @@ class Settings(BaseSettings):
 settings = Settings()
 update_logging(environment=settings.ENVIRONMENT)
 logger.info(f"Application settings loaded: APP_TITLE={settings.APP_TITLE}, ENVIRONMENT={settings.ENVIRONMENT}")
-print(123)

@@ -20,11 +20,9 @@ async def create_new_user(session: AsyncSession, user_create: UserCreate) -> Use
     try:
         existing_user = await get_user_by_username(session, user_create.username)
         if existing_user:
-            logger.warning(f"User creation failed: Username {user_create.username} already exists")
             raise ValueError("Username already exists")
 
         user = await create_user(session, user_create)
-        logger.info(f"Created user {user.username}")
         return user
     except ValueError:
         raise

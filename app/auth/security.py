@@ -33,21 +33,17 @@ async def get_current_user(
         username = credentials.username
         user: UserResponse = await get_user_by_username(session, username)
         if not user:
-            logger.warning(f"Authentication failed: User {username} not found")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid username or password",
                 headers={"WWW-Authenticate": "Basic"},
             )
         if not verify_password(credentials.password, user.hashed_password):
-            logger.warning(f"Authentication failed: Invalid password for user {username}")
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid username or password",
                 headers={"WWW-Authenticate": "Basic"},
             )
-
-        logger.debug(f"Authenticated user: {username}")
         return user
     except HTTPException:
         raise

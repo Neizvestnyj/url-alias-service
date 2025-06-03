@@ -1,6 +1,6 @@
 # Создание новой короткой ссылки
 # Ожидаемый ответ: 201 Created с данными URL
-POST http://localhost:8000/urls
+POST http://localhost:8000/api/v1/urls
 Content-Type: application/json
 Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM=  # testuser:testpass123
 
@@ -13,7 +13,7 @@ Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM=  # testuser:testpass123
 
 # Создание ссылки с автоматическим short_key
 # Ожидаемый ответ: 201 Created с сгенерированным short_key
-POST http://localhost:8000/urls
+POST http://localhost:8000/api/v1/urls
 Content-Type: application/json
 Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM=
 
@@ -26,19 +26,19 @@ Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM=
 
 # Получение списка URL пользователя
 # Ожидаемый ответ: 200 OK со списком URL
-GET http://localhost:8000/urls
+GET http://localhost:8000/api/v1/urls
 Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM=
 
 ###
 
 # Удаление URL по ID
 # Ожидаемый ответ: 204 No Content
-DELETE http://localhost:8000/urls/1
+DELETE http://localhost:8000/api/v1/urls/1
 Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM=
 
 ###
 
 # Удаление несуществующего URL
 # Ожидаемый ответ: 404 Not Found
-DELETE http://localhost:8000/urls/999
+DELETE http://localhost:8000/api/v1/urls/999
 Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM=

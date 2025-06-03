@@ -15,10 +15,6 @@ def setup_logging(environment: str = "development", is_file_handler: bool = Fals
     """
     logger = logging.getLogger("url_alias_service")
 
-    # Предотвращаем дублирование обработчиков
-    if logger.handlers:
-        return logger
-
     # Уровень логирования в зависимости от окружения
     log_level = logging.DEBUG if environment == "development" else logging.INFO
 
@@ -32,6 +28,10 @@ def setup_logging(environment: str = "development", is_file_handler: bool = Fals
     console_handler = logging.StreamHandler()
     console_handler.setFormatter(log_format)
     console_handler.setLevel(log_level)
+
+    # Добавить, только если ещё не добавлен
+    if not any(isinstance(h, logging.StreamHandler) for h in logger.handlers):
+        logger.addHandler(console_handler)
 
     if is_file_handler:
         # Файловый обработчик с ротацией

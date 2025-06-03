@@ -29,10 +29,8 @@ async def register_user(user_create: UserCreate, session: AsyncSession = session
     """
     try:
         user = await create_new_user(session, user_create)
-        logger.info(f"Registered user {user.username}")
         return user
     except ValueError as e:
-        logger.warning(f"Registration failed: {str(e)}")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from None
     except Exception as e:
         logger.error(f"Error registering user {user_create.username}: {e}")

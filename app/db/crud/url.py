@@ -25,7 +25,7 @@ async def create_url(session: AsyncSession, url_create: URLCreate, user_id: int)
         session.add(db_url)
         await session.commit()
         await session.refresh(db_url)
-        logger.info(f"Created URL with short_key: {db_url.short_key} for user_id: {user_id}")
+
         return URLResponse.model_validate(db_url)
     except Exception as e:
         logger.error(f"Error creating URL for user_id {user_id}: {e}")
@@ -47,9 +47,7 @@ async def get_url_by_short_key(session: AsyncSession, short_key: str) -> URLResp
         result = await session.execute(select(URL).where(URL.short_key == short_key))
         url = result.scalars().first()
         if url:
-            logger.debug(f"Retrieved URL with short_key: {short_key}")
             return URLResponse.model_validate(url)
-        logger.debug(f"No URL found with short_key: {short_key}")
         return None
     except Exception as e:
         logger.error(f"Error retrieving URL by short_key {short_key}: {e}")
@@ -71,9 +69,7 @@ async def get_url_by_id(session: AsyncSession, url_id: int) -> URLResponse | Non
         result = await session.execute(select(URL).where(URL.id == url_id))
         url = result.scalars().first()
         if url:
-            logger.debug(f"Retrieved URL with id: {url_id}")
             return URLResponse.model_validate(url)
-        logger.debug(f"No URL found with id: {url_id}")
         return None
     except Exception as e:
         logger.error(f"Error retrieving URL by id {url_id}: {e}")
@@ -94,7 +90,6 @@ async def get_urls_by_user(session: AsyncSession, user_id: int) -> list[URLRespo
     try:
         result = await session.execute(select(URL).where(URL.user_id == user_id))
         urls = result.scalars().all()
-        logger.debug(f"Retrieved {len(urls)} URLs for user_id: {user_id}")
         return [URLResponse.model_validate(url) for url in urls]
     except Exception as e:
         logger.error(f"Error retrieving URLs for user_id {user_id}: {e}")
@@ -114,7 +109,6 @@ async def increment_click_count(session: AsyncSession, url_id: int) -> None:
     try:
         await session.execute(update(URL).where(URL.id == url_id).values(click_count=URL.click_count + 1))
         await session.commit()
-        logger.debug(f"Incremented click count for URL id: {url_id}")
     except Exception as e:
         logger.error(f"Error incrementing click count for URL id {url_id}: {e}")
         raise
@@ -134,11 +128,9 @@ async def delete_url(session: AsyncSession, url_id: int) -> bool:
     try:
         result = await session.execute(delete(URL).where(URL.id == url_id))
         await session.commit()
-        rowcount = result.rowcount()
+        rowcount = result.rowcount
         if rowcount > 0:
-            logger.info(f"Deleted URL with id: {url_id}")
             return True
-        logger.debug(f"No URL found with id: {url_id}")
         return False
     except Exception as e:
         logger.error(f"Error deleting URL with id {url_id}: {e}")

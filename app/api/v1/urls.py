@@ -41,10 +41,8 @@ async def create_short_url(
             short_key=url_create.short_key,
             user_id=current_user.id,
         )
-        logger.info(f"User {current_user.username} created URL with short_key {url.short_key}")
         return url
     except ValueError as e:
-        logger.warning(f"Create URL failed: {str(e)}")
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=str(e)) from None
     except Exception as e:
         logger.error(f"Error creating URL for user {current_user.username}: {e}")
@@ -67,7 +65,6 @@ async def get_user_urls_endpoint(
     """
     try:
         urls = await get_user_urls(session, current_user.id)
-        logger.info(f"Retrieved {len(urls)} URLs for user {current_user.username}")
         return urls
     except Exception as e:
         logger.error(f"Error retrieving URLs for user {current_user.username}: {e}")
@@ -76,7 +73,7 @@ async def get_user_urls_endpoint(
         ) from None
 
 
-@router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{url_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_short_url(
     url_id: int, current_user: UserResponse = current_user_depends, session: AsyncSession = session_depends
 ) -> None:
@@ -94,12 +91,10 @@ async def delete_short_url(
     """
     try:
         await delete_user_url(session, url_id, current_user.id)
-        logger.info(f"User {current_user.username} deleted URL with id {url_id}")
     except ValueError as e:
-        logger.warning(f"Delete failed: {str(e)}")
         if str(e) == "URL not found":
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from None
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail=str(e)) from None
     except Exception as e:
         logger.error(f"Error deleting URL id {url_id} for user {current_user.username}: {e}")
-        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to delete URL") from None
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Internal server error") from None

@@ -48,6 +48,8 @@ class URLResponse(URLBase):
     :type created_at: datetime
     :param click_count: Количество переходов.
     :type click_count: int
+    :param user_id: Идентификатор владельца URL.
+    :type user_id: int
     """
 
     id: int
@@ -56,5 +58,6 @@ class URLResponse(URLBase):
     expires_at: datetime
     created_at: datetime
     click_count: int
+    user_id: int
 
     model_config = {"from_attributes": True}

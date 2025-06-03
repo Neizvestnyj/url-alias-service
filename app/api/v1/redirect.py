@@ -27,7 +27,6 @@ async def redirect_to_url_endpoint(short_key: str, session: AsyncSession = sessi
         original_url = await redirect_to_url(session, short_key)
         return RedirectResponse(url=str(original_url), status_code=status.HTTP_307_TEMPORARY_REDIRECT)
     except ValueError as e:
-        logger.warning(f"Redirect failed: {str(e)}")
         if str(e) == "URL not found":
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=str(e)) from None
         raise HTTPException(status_code=status.HTTP_410_GONE, detail=str(e)) from None

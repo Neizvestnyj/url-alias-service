@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 
 
@@ -31,9 +33,12 @@ class UserResponse(UserBase):
     :type id: int
     :param hashed_password: Захэшированный пароль пользователя.
     :type hashed_password: str
+    :param created_at: Дата создания.
+    :type created_at: datetime
     """
 
     id: int
     hashed_password: str
+    created_at: datetime
 
     model_config = {"from_attributes": True}
