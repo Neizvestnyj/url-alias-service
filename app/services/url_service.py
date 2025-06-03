@@ -126,7 +126,7 @@ async def delete_user_url(session: AsyncSession, url_id: int, user_id: int) -> N
             raise ValueError("URL not found")
 
         logger.info(f"Deleted URL id {url_id} for user_id {user_id}")
-    except ValueError as e:
+    except ValueError:
         raise
     except Exception as e:
         logger.error(f"Error deleting URL id {url_id} for user_id {user_id}: {e}")

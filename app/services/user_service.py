@@ -26,7 +26,7 @@ async def create_new_user(session: AsyncSession, user_create: UserCreate) -> Use
         user = await create_user(session, user_create)
         logger.info(f"Created user {user.username}")
         return user
-    except ValueError as e:
+    except ValueError:
         raise
     except Exception as e:
         logger.error(f"Error creating user {user_create.username}: {e}")

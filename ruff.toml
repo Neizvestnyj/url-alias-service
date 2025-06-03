@@ -23,7 +23,7 @@ lint.ignore = [
     "D100", # Missing docstring in public module
     "D203", # One blank line before class docstring (conflicts with D211)
     "D213", # Multi-line docstring summary should start at the second line
-    "T201", #  Did not ignore print
+    "T201", #  Ignore print
 ]
 
 # Максимальная длина строки

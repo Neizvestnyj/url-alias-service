@@ -1,22 +1,20 @@
-"""Add user_id to urls
+"""Add user_id to urls.
 
 Revision ID: e5828c5ba8cc
 Revises: f33b70fdb0aa
 Create Date: 2025-06-02 23:03:15.331001
-
 """
 
-from typing import Sequence, Union
+from collections.abc import Sequence
 
 from alembic import op
 import sqlalchemy as sa
 
-
 # revision identifiers, used by Alembic.
 revision: str = "e5828c5ba8cc"
-down_revision: Union[str, None] = "f33b70fdb0aa"
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | None = "f33b70fdb0aa"
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:

@@ -1,22 +1,17 @@
-"""Fix expires_at
+"""Fix expires_at.
 
 Revision ID: a082fe52aacf
 Revises: e5828c5ba8cc
 Create Date: 2025-06-03 00:58:36.431726
-
 """
 
-from typing import Sequence, Union
-
-from alembic import op
-import sqlalchemy as sa
-
+from collections.abc import Sequence
 
 # revision identifiers, used by Alembic.
 revision: str = "a082fe52aacf"
-down_revision: Union[str, None] = "e5828c5ba8cc"
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | None = "e5828c5ba8cc"
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:

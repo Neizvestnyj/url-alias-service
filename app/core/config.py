@@ -34,7 +34,7 @@ class Settings(BaseSettings):
     )
 
     @property
-    def DATABASE_URL_SYNC(self) -> str:
+    def DATABASE_URL_SYNC(self) -> str:  # noqa: N802
         """
         Возвращает синхронный URL подключения к базе данных, заменяя драйвер ``asyncpg`` на ``psycopg2``.
 
@@ -47,3 +47,4 @@ class Settings(BaseSettings):
 settings = Settings()
 update_logging(environment=settings.ENVIRONMENT)
 logger.info(f"Application settings loaded: APP_TITLE={settings.APP_TITLE}, ENVIRONMENT={settings.ENVIRONMENT}")
+print(123)
