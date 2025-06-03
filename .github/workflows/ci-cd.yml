@@ -60,12 +60,10 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd backend
           poetry install --with dev
 
       - name: Run tests with coverage
         run: |
-          cd backend
           poetry run coverage run -m pytest
           poetry run coverage report
           poetry run coveralls
