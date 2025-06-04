@@ -1,0 +1,75 @@
+# Byte-compiled
+__pycache__
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Files backup
+~*
+~$*
+*.bak
+*.drawio.bkp
+
+# Distribution / packaging
+.Python
+lib
+lib64
+parts
+sdist
+var
+wheels
+pip-wheel-metadata
+share/python-wheels
+develop-eggs
+eggs
+.eggs
+*.egg-info
+*.egg
+MANIFEST
+.installed.cfg
+downloads
+docs/_build
+build
+dist
+bin
+.buildozer
+
+# Logs
+*.log
+pip-log.txt
+pip-delete-this-directory.txt
+logs/
+
+# Editors
+.vscode
+.ipynb_checkpoints
+*.swp
+# PyCharm
+.idea/
+
+# Environments
+venv
+.venv
+env
+backend/.env
+.python-version
+.env
+
+# Temp / Cache
+cache
+.cache
+temp
+.temp
+.pytest_cache
+.coverage
+
+# Monitoring
+monitoring/prometheus/data/
+monitoring/grafana/data/
+monitoring/loki/data/
+
+# Project
+test.py
+backup.sql

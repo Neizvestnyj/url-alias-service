@@ -1,0 +1,47 @@
+version: '3.9'
+
+services:
+  app:
+    build:
+      context: .
+      target: dev
+    container_name: url-alias-service-app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./app:/app/app
+      - ./tests:/app/tests
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:1234@db:5432/url_alias_db
+    depends_on:
+      db:
+        condition: service_healthy
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    networks:
+      - url-alias-network
+
+  db:
+    image: postgres:17
+    container_name: url-alias-service-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DB=url_alias_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - url-alias-network
+
+volumes:
+  postgres_data:
+
+networks:
+  url-alias-network:
+    driver: bridge

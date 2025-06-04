@@ -1,0 +1,48 @@
+# Создание новой короткой ссылки
+# Ожидаемый ответ: 201 Created с данными URL
+POST http://localhost:8000/api/v1/urls
+Content-Type: application/json
+Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM=  # testuser:testpass123
+
+{
+  "original_url": "https://example.com",
+  "short_key": "exmpl"
+}
+
+###
+
+# Создание ссылки с автоматическим short_key
+# Ожидаемый ответ: 201 Created с сгенерированным short_key
+POST http://localhost:8000/api/v1/urls
+Content-Type: application/json
+Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM=
+
+{
+  "original_url": "https://google.com",
+  "short_key": null
+}
+
+###
+
+# Получение списка URL пользователя с пагинацией и фильтрацией
+# Параметры:
+# - page: Номер страницы (по умолчанию 1)
+# - per_page: Количество записей на страницу (по умолчанию 10, максимум 100)
+# - is_active: Фильтр по активным ссылкам (true/false, опционально)
+# Ожидаемый ответ: 200 OK с JSON-объектом, содержащим список URL и метаинформацию
+GET http://localhost:8000/api/v1/urls?page=1&per_page=5&is_active=true
+Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM=
+
+###
+
+# Удаление URL по ID
+# Ожидаемый ответ: 204 No Content
+DELETE http://localhost:8000/api/v1/urls/1
+Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM=
+
+###
+
+# Удаление несуществующего URL
+# Ожидаемый ответ: 404 Not Found
+DELETE http://localhost:8000/api/v1/urls/999
+Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM=

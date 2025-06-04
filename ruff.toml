@@ -1,0 +1,48 @@
+# Target Python version
+target-version = "py311"
+
+src = ["app", "tests", "migrations"]
+
+# Включаем все важные правила (вместо flake8 + isort + pycodestyle + pyflakes и т.п.)
+lint.select = [
+    "E", # pycodestyle errors
+    "F", # pyflakes
+    "B", # flake8-bugbear
+    "I", # isort
+    "N", # pep8-naming
+    "D", # pydocstyle
+    "UP", # pyupgrade
+    "C90", # mccabe complexity
+    "T20", # flake8-print
+    "ANN", # flake8-annotations
+]
+
+# Отключаем некоторые правила, которые конфликтуют с нашим стилем
+lint.ignore = [
+    "D104", # Missing docstring in public package
+    "D100", # Missing docstring in public module
+    "D203", # One blank line before class docstring (conflicts with D211)
+    "D213", # Multi-line docstring summary should start at the second line
+    "T201", #  Ignore print
+]
+
+# Максимальная длина строки
+line-length = 120
+
+# Порядок импортов: стандарт, сторонние, локальные
+[lint.isort]
+known-first-party = ["app", "api", "auth", "core", "db", "lifecycle", "middleware","schemas", "services"]
+known-third-party = ["pytest"]
+force-sort-within-sections = true
+combine-as-imports = true
+lines-between-types = 1
+
+# Проверка docstring-ов в стиле reST
+[lint.pydocstyle]
+convention = "pep257"
+
+[format]
+line-ending = "lf"
+
+[lint.mccabe]
+max-complexity = 10
