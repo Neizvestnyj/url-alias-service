@@ -35,7 +35,7 @@ jobs:
         env:
           POSTGRES_USER: postgres
           POSTGRES_PASSWORD: 1234
-          POSTGRES_DB: test_randomuser_db
+          POSTGRES_DB: test_url_alias_db
         options: >-
           --health-cmd "pg_isready -U postgres"
           --health-interval 5s
