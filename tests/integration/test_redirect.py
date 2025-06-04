@@ -20,9 +20,7 @@ async def test_redirect_url(client: AsyncClient, async_session: AsyncSession) ->
     :returns: None
     """
     user = await create_test_user(async_session, "testuser")
-    url = await create_test_url(
-        async_session, user_id=user["id"], original_url="https://example.com", short_key="testurl"
-    )
+    await create_test_url(async_session, user_id=user["id"], original_url="https://example.com", short_key="testurl")
     # Отладка: проверяем, что URL существует в базе
     db_url = await get_url_by_short_key(async_session, "testurl")
     assert db_url is not None, "URL with short_key 'testurl' not found in database"

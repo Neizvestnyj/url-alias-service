@@ -1,10 +1,10 @@
 import logging
-import pytest
+
 from httpx import AsyncClient
+import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.middleware.auth import configure_auth_middleware, log_request_middleware
-from tests.utils.db_mocks import create_test_user, create_test_url
+from tests.utils.db_mocks import create_test_url, create_test_user
 
 
 async def test_log_request_middleware(
