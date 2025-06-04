@@ -84,8 +84,9 @@ async def test_get_user_urls(async_session: AsyncSession, setup_user_and_url: tu
     :returns: None
     """
     user, _ = setup_user_and_url
-    urls: list[URLResponse] = await get_user_urls(async_session, user["id"])
+    urls, total = await get_user_urls(async_session, user["id"], 1, 10)
     assert len(urls) == 1
+    assert total == 1
     assert urls[0].short_key == "exmpl"
 
 
@@ -101,8 +102,9 @@ async def test_delete_user_url(async_session: AsyncSession, setup_user_and_url: 
     """
     user, url = setup_user_and_url
     await delete_user_url(async_session, url.id, user["id"])
-    urls: list[URLResponse] = await get_user_urls(async_session, user["id"])
+    urls, total = await get_user_urls(async_session, user["id"], 1, 10)
     assert len(urls) == 0
+    assert total == 0
 
 
 async def test_delete_user_url_not_owner(async_session: AsyncSession) -> None:

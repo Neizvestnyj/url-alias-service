@@ -76,20 +76,29 @@ async def create_short_url(
         raise e from None
 
 
-async def get_user_urls(session: AsyncSession, user_id: int) -> list[URLResponse]:
+async def get_user_urls(
+    session: AsyncSession, user_id: int, page: int, per_page: int, is_active: bool | None = None
+) -> tuple[list[URLResponse], int]:
     """
-    Получает список URL пользователя.
+    Получает список URL пользователя с пагинацией и фильтрацией.
 
     :param session: Асинхронная сессия базы данных.
     :type session: AsyncSession
     :param user_id: Идентификатор пользователя.
     :type user_id: int
-    :returns: Список URL записей.
-    :rtype: List[URLResponse]
+    :param page: Номер страницы (начинается с 1).
+    :type page: int
+    :param per_page: Количество записей на страницу.
+    :type per_page: int
+    :param is_active: Фильтр по активным ссылкам (True/False или None для всех).
+    :type is_active: bool | None
+    :returns: Кортеж из списка URL и общего количества записей.
+    :rtype: Tuple[List[URLResponse], int]
+    :raises Exception: Если произошла ошибка при запросе к базе данных.
     """
     try:
-        urls = await get_urls_by_user(session, user_id)
-        return urls
+        urls, total = await get_urls_by_user(session, user_id, page, per_page, is_active)
+        return urls, total
     except Exception as e:
         logger.error(f"Error retrieving URLs for user_id {user_id}: {e}")
         raise e from None

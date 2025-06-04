@@ -61,3 +61,26 @@ class URLResponse(URLBase):
     user_id: int
 
     model_config = {"from_attributes": True}
+
+
+class URLListResponse(BaseModel):
+    """
+    Схема для ответа с пагинацией списка URL.
+
+    :param items: Список URL записей.
+    :type items: List[URLResponse]
+    :param total: Общее количество записей.
+    :type total: int
+    :param page: Текущая страница.
+    :type page: int
+    :param per_page: Количество записей на страницу.
+    :type per_page: int
+    :param total_pages: Общее количество страниц.
+    :type total_pages: int
+    """
+
+    items: list[URLResponse]
+    total: int
+    page: int
+    per_page: int
+    total_pages: float

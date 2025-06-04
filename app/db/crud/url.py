@@ -1,4 +1,4 @@
-from sqlalchemy import delete, update
+from sqlalchemy import delete, func, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -76,21 +76,44 @@ async def get_url_by_id(session: AsyncSession, url_id: int) -> URLResponse | Non
         raise e from None
 
 
-async def get_urls_by_user(session: AsyncSession, user_id: int) -> list[URLResponse]:
+async def get_urls_by_user(
+    session: AsyncSession, user_id: int, page: int, per_page: int, is_active: bool | None = None
+) -> tuple[list[URLResponse], int]:
     """
-    Получает список всех URL, созданных пользователем.
+    Получает список URL пользователя с пагинацией и фильтрацией.
 
     :param session: Асинхронная сессия базы данных.
     :type session: AsyncSession
     :param user_id: Идентификатор пользователя.
     :type user_id: int
-    :returns: Список URL записей.
-    :rtype: list[URLResponse]
+    :param page: Номер страницы (начинается с 1).
+    :type page: int
+    :param per_page: Количество записей на страницу.
+    :type per_page: int
+    :param is_active: Фильтр по активным ссылкам (True/False или None для всех).
+    :type is_active: bool | None
+    :returns: Кортеж из списка URL и общего количества записей.
+    :rtype: Tuple[List[URL], int]
+    :raises Exception: Если произошла ошибка при запросе к базе данных.
     """
     try:
-        result = await session.execute(select(URL).where(URL.user_id == user_id))
+        offset = (page - 1) * per_page
+        query = select(URL).where(URL.user_id == user_id)
+        total_query = select(func.count()).select_from(URL).where(URL.user_id == user_id)
+
+        if is_active is not None:
+            query = query.where(URL.is_active == is_active)
+            total_query = total_query.where(URL.is_active == is_active)
+
+        query = query.order_by(URL.created_at.desc()).limit(per_page).offset(offset)
+
+        result = await session.execute(query)
         urls = result.scalars().all()
-        return [URLResponse.model_validate(url) for url in urls]
+        urls = [URLResponse.model_validate(url) for url in urls]
+        total_result = await session.execute(total_query)
+        total = total_result.scalar_one()
+
+        return urls, total
     except Exception as e:
         logger.error(f"Error retrieving URLs for user_id {user_id}: {e}")
         raise

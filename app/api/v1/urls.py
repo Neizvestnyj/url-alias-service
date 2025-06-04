@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth.security import get_current_user
 from app.core.logging import logger
 from app.db.session import get_session
-from app.schemas.url import URLCreate, URLResponse
+from app.schemas.url import URLCreate, URLListResponse, URLResponse
 from app.schemas.user import UserResponse
 from app.services.url_service import create_short_url as create_short_url_service, delete_user_url, get_user_urls
 
@@ -49,23 +49,42 @@ async def create_short_url(
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail="Failed to create URL") from None
 
 
-@router.get("", response_model=list[URLResponse])
+@router.get("", response_model=URLListResponse)
 async def get_user_urls_endpoint(
-    current_user: UserResponse = current_user_depends, session: AsyncSession = session_depends
-) -> list[URLResponse]:
+    page: int = Query(1, ge=1, description="Номер страницы"),
+    per_page: int = Query(10, ge=1, le=100, description="Количество записей на страницу"),
+    is_active: bool | None = None,
+    current_user: UserResponse = current_user_depends,
+    session: AsyncSession = session_depends,
+) -> URLListResponse:
     """
-    Получает список URL, созданных пользователем.
+    Получает список URL, созданных пользователем, с пагинацией и фильтрацией.
 
+    :param page: Номер страницы (начинается с 1).
+    :type page: int
+    :param per_page: Количество записей на страницу (максимум 100).
+    :type per_page: int
+    :param is_active: Фильтр по активным ссылкам (True/False или None для всех).
+    :type is_active: bool | None
     :param current_user: Текущий аутентифицированный пользователь.
     :type current_user: UserResponse
     :param session: Асинхронная сессия базы данных.
     :type session: AsyncSession
-    :returns: Список URL записей.
-    :rtype: list[URLResponse]
+    :returns: Список URL с метаинформацией пагинации.
+    :rtype: URLListResponse
+    :raises HTTPException: Если произошла ошибка при получении данных.
     """
     try:
-        urls = await get_user_urls(session, current_user.id)
-        return urls
+        urls, total = await get_user_urls(
+            session, user_id=current_user.id, page=page, per_page=per_page, is_active=is_active
+        )
+        return URLListResponse(
+            items=[URLResponse.model_validate(url) for url in urls],
+            total=total,
+            page=page,
+            per_page=per_page,
+            total_pages=(total + per_page - 1) // per_page,
+        )
     except Exception as e:
         logger.error(f"Error retrieving URLs for user {current_user.username}: {e}")
         raise HTTPException(

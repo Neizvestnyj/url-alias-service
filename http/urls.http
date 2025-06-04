@@ -24,9 +24,13 @@ Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM=
 
 ###
 
-# Получение списка URL пользователя
-# Ожидаемый ответ: 200 OK со списком URL
-GET http://localhost:8000/api/v1/urls
+# Получение списка URL пользователя с пагинацией и фильтрацией
+# Параметры:
+# - page: Номер страницы (по умолчанию 1)
+# - per_page: Количество записей на страницу (по умолчанию 10, максимум 100)
+# - is_active: Фильтр по активным ссылкам (true/false, опционально)
+# Ожидаемый ответ: 200 OK с JSON-объектом, содержащим список URL и метаинформацию
+GET http://localhost:8000/api/v1/urls?page=1&per_page=5&is_active=true
 Authorization: Basic dGVzdHVzZXI6dGVzdHBhc3MxMjM=
 
 ###
