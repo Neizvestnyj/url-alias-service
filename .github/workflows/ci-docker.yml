@@ -34,12 +34,20 @@ jobs:
       - name: Check containers
         run: |
           docker-compose ps
+          # Проверяем, что все контейнеры запущены
+          if [ "$(docker-compose ps -q | wc -l)" -eq "$(docker-compose ps -q --status=running | wc -l)" ]; then
+            echo "All containers are running."
+          else
+            echo "Some containers are not running!"
+            docker-compose ps
+            exit 1
+          fi
 
       - name: Wait for services start
         run: |
           timeout=15
           elapsed=0
-          while ! curl --silent --fail http://localhost:8000/health && [ $elapsed -lt $timeout ]; do
+          while ! curl --silent --fail http://localhost:8000/docs && [ $elapsed -lt $timeout ]; do
             echo "Waiting for services to be ready..."
             sleep 5
             elapsed=$((elapsed + 5))
